@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multilevel Menu</title>
+    <style>
+        /* Base styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Menu styles */
+        #m_menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #m_menu ul li {
+            padding: 10px;
+        }
+
+        #m_menu ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        /* Submenu styles */
+        #m_menu ul ul {
+            display: none;
+            margin-left: 10px;
+        }
+
+        #m_menu ul li:hover>ul {
+            display: block;
+        }
+
+        /* Adjustments for readability */
+        #m_menu ul ul li {
+            background-color: #f9f9f9;
+        }
+
+        #m_menu ul ul li a {
+            color: #555;
+        }
+
+        #m_menu ul ul li:hover {
+            background-color: #ddd;
+        }
+
+        #m_menu ul ul ul {
+            margin-left: 10px;
+            top: 0;
+            left: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="m_menu" style="display:none;">Here it is included the Menu, with JavaScript</div>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            // Object with parents and their children
+            var ctgLists = {
+                0: [1, 2],
+                1: [3, 4],
+                2: [5],
+                3: [6],
+                6: [7],
+            };
+
+            // Object with link data
+            var ctgData = {
+                1: {
+                    'lname': 'Parent 1',
+                    'lurl': '#',
+                },
+                2: {
+                    'lname': 'Parent 2',
+                    'lurl': '#',
+                },
+                3: {
+                    'lname': 'Child 1 of Parent 1',
+                    'lurl': '#',
+                },
+                4: {
+                    'lname': 'Child 2 of Parent 1',
+                    'lurl': '#',
+                },
+                5: {
+                    'lname': 'Child of Parent 2',
+                    'lurl': '#',
+                },
+                6: {
+                    'lname': 'Subchild 1 of Child 1',
+                    'lurl': '#',
+                },
+                7: {
+                    'lname': 'Subchild 1 of Subchild 1',
+                    'lurl': '#',
+                },
+            };
+
+            // Recursive function to create multilevel menu list
+            function multilevelMenu(parentId, ctgLists, ctgData) {
+                var html = ''; // Stores and returns the HTML code with Menu lists
+
+                // If parent item with child IDs in ctgLists
+                if (ctgLists[parentId]) {
+                    html = '<ul>'; // Open UL
+
+                    // Traverse the array with child IDs of the current parent and add them in LI tags, with their data from ctgData
+                    for (var childId in ctgLists[parentId]) {
+                        // Open LI
+                        html += '<li><a href="' + ctgData[ctgLists[parentId][childId]].lurl + '">' + ctgData[ctgLists[parentId][childId]].lname + '</a>';
+
+                        html += multilevelMenu(ctgLists[parentId][childId], ctgLists, ctgData); // Re-calls the function to find parent with child-items recursively
+
+                        html += '</li>'; // Close LI
+                    }
+                    html += '</ul>'; // Close UL
+                }
+
+                return html;
+            }
+
+            // Adds the HTML menu lists in the DIV with id="m_menu"
+            var menuContainer = document.getElementById('m_menu');
+            menuContainer.innerHTML = multilevelMenu(0, ctgLists, ctgData);
+            menuContainer.style.display = 'block';
+        });
+    </script>
+
+</body>
+
+</html>
